@@ -1,1 +1,1 @@
-# SubMet: Subcellular Metrics for Quality Control
+# SubQCAT: Subcellular Quality Control AssessmenT
