@@ -1,7 +1,9 @@
-from SubQCAT.io import XeniumBundle
 import dask.dataframe as dd
-import pandas as pd
 import numpy as np
+import pandas as pd
+
+from SubQCAT.io import XeniumBundle
+
 
 class SampleXenium:
     def __init__(self, xenium: XeniumBundle):

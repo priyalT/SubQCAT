@@ -1,7 +1,9 @@
-import pytest
 import dask.dataframe as dd
 import pandas as pd
+import pytest
+
 from SubQCAT.io import XeniumBundle
+
 
 @pytest.fixture
 def mock_bundle(tmp_path):

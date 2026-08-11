@@ -1,7 +1,7 @@
 from pathlib import Path
-import os
+
 import dask.dataframe as dd
-import pandas as pd
+
 
 class XeniumBundle:
     def __init__(self, path: Path):
