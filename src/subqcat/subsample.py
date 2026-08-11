@@ -9,7 +9,7 @@ class SampleXenium:
     def __init__(self, xenium: XeniumBundle):
         self.xenium = xenium
 
-    def clean_data(self) -> dd:
+    def clean_data(self) -> dd.DataFrame:
         df = self.xenium.load_dataframe()
         df_quality = df[df['qv']>= 20.0]
         df_gene = df_quality[df_quality['is_gene']==True]
