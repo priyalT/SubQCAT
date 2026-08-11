@@ -28,7 +28,7 @@ jobs:
         run: uv sync
 
       - name: Run Ruff
-        run: make lint
+        run: uv run ruff check .
 
       - name: Run mypy
-        run: make type-check
+        run: uv run mypy .
