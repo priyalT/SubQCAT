@@ -1,5 +1,4 @@
 import pytest
-import os
 import dask.dataframe as dd
 import pandas as pd
 from SubQCAT.io import XeniumBundle
