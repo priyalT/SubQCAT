@@ -11,6 +11,10 @@ class SampleXenium:
 
     def clean_data(self) -> dd.DataFrame:
         df = self.xenium.load_dataframe()
+        required_cols = ['qv', 'is_gene', 'cell_id', 'codeword_index', 'codeword_category']
+        missing_cols = [col for col in required_cols if col not in df.columns]
+        if missing_cols:
+            raise ValueError(f"The dataset is missing required columns for cleaning: {missing_cols}")
         df_quality = df[df['qv']>= 20.0]
         df_gene = df_quality[df_quality['is_gene']==True]
         df_clean = df_gene[df_gene['cell_id'] != "UNASSIGNED"]
@@ -21,6 +25,8 @@ class SampleXenium:
     def subsample(self) -> pd.DataFrame:
         clean_df = self.clean_data()
         unique_cells = clean_df['cell_id'].unique().compute()
+        if len(unique_cells) == 0:
+            raise ValueError("No cells remain after cleaning the data! Cannot subsample.")
         np.random.seed(42)
         sample_size = min(5000, len(unique_cells))
         sampled_cell_ids = np.random.choice(unique_cells, size=sample_size, replace=False)
