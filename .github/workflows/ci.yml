@@ -24,6 +24,9 @@ jobs:
         with:
           python-version: "3.13"
 
+      - name: Run tests with coverage
+        run: uv run pytest --cov=src/subqcat --cov-report=xml
+
       - name: Install dependencies
         run: uv sync
 
@@ -32,3 +35,10 @@ jobs:
 
       - name: Run mypy
         run: uv run mypy .
+      
+      - name: Upload coverage reports to Codecov
+        uses: codecov/codecov-action@v5
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+
+
