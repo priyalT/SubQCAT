@@ -2,7 +2,7 @@ import dask.dataframe as dd
 import pandas as pd
 import pytest
 
-from SubQCAT.io import XeniumBundle
+from subqcat.io import XeniumBundle
 
 
 @pytest.fixture
