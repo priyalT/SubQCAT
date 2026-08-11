@@ -1,3 +1,4 @@
+import dask.dataframe as dd
 import pandas as pd
 import pytest
 
@@ -31,11 +32,19 @@ def no_unique_cells_bundle(tmp_path):
 
 def test_subsampling(mock_bundle):
     sample_xenium = SampleXenium(mock_bundle)
-    sample_xenium.subsample()
+    final_df = sample_xenium.subsample()
+    assert isinstance(final_df, pd.DataFrame)
+    assert len(final_df['cell_id'].unique()) <= 5000
+
 
 def test_cleaning(mock_bundle):
     sample_xenium = SampleXenium(mock_bundle)
-    sample_xenium.clean_data()
+    clean_df = sample_xenium.clean_data()
+    assert isinstance(clean_df, dd.DataFrame)
+    assert "codeword_index" not in clean_df.columns
+    assert "codeword_category" not in clean_df.columns
+    assert "is_gene" not in clean_df.columns
+
 
 def test_cleaning_validation(mock_error_bundle):
     sample_xenium = SampleXenium(mock_error_bundle)
