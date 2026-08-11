@@ -17,7 +17,7 @@ def test_validation_valid_bundle(mock_bundle):
     mock_bundle.validate()
 
 def test_validation_bundle_does_not_exist(tmp_path):
-    bundle = XeniumBundle.validate(tmp_path / "false_data")
+    bundle = XeniumBundle(tmp_path / "false_data.txt")
     with pytest.raises(FileNotFoundError):
         bundle.validate()
 
