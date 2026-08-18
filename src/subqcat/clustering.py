@@ -5,10 +5,14 @@ from sklearn.cluster import KMeans
 
 class Cluster:
     def __init__(self, dataset: pd.DataFrame):
+        required_cols = ['cell_id', 'distance_from_center']
+        missing_cols = [col for col in required_cols if col not in dataset.columns]
+        if missing_cols:
+            raise ValueError(f"Missing required columns for clustering: {missing_cols}")
+
         self.dataset = dataset.copy()
 
     def kMeans_clustering(self, n_clusters: int = 2) -> pd.DataFrame:
-
         """Cluster cells based on their distance_from_center using KMeans."""
 
         distance_array = np.array(self.dataset['distance_from_center']).reshape(-1, 1)
