@@ -41,6 +41,8 @@ dev = [
     "pytest>=9.1.1",
     "pytest-cov>=7.1.0",
     "ruff>=0.16.2",
+    "scikit-learn-stubs>=0.0.3",
+    "types-seaborn>=0.13.2.20260728",
 ]
 
 [build-system]

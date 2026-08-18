@@ -1,6 +1,6 @@
-from subqcat.io import XeniumBundle
 import pandas as pd
-import numpy as np
+
+from subqcat.io import XeniumBundle
 
 
 class QualityControl:
