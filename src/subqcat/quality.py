@@ -3,7 +3,7 @@ import pandas as pd
 from subqcat.io import XeniumBundle
 
 
-class QualityControl:
+class QCEvaluator:
     def __init__(self, clustered_df: pd.DataFrame, bundle: XeniumBundle):
         self.clustered_df = clustered_df
         self.bundle = bundle

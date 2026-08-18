@@ -1,10 +1,10 @@
 import pandas as pd
 import pytest
 
-from subqcat.clustering import Cluster
+from subqcat.clustering import SpatialClusterer
 from subqcat.io import XeniumBundle
-from subqcat.quality import QualityControl
-from subqcat.subsample import SampleXenium
+from subqcat.quality import QCEvaluator
+from subqcat.subsample import XeniumSampler
 
 
 @pytest.fixture
@@ -27,9 +27,9 @@ def mock_transcripts_bundle(tmp_path):
 
     fake_data.to_parquet(bundle_dir / "transcripts.parquet")
     bundle = XeniumBundle(bundle_dir)
-    sub_sample = SampleXenium(bundle)
+    sub_sample = XeniumSampler(bundle)
     sub_sample = sub_sample.subsample()
-    clustering = Cluster(sub_sample)
+    clustering = SpatialClusterer(sub_sample)
     return clustering.kMeans_clustering()
 
 
@@ -60,16 +60,16 @@ def mock_err_bundle(tmp_path):
 
 
 def test_cell_merging(mock_transcripts_bundle, mock_cells_bundle):
-    qc = QualityControl(mock_transcripts_bundle, mock_cells_bundle)
+    qc = QCEvaluator(mock_transcripts_bundle, mock_cells_bundle)
     merged_cells = qc.merge_with_cells()
     assert isinstance(merged_cells, pd.DataFrame)
 
 def test_cell_qc(mock_transcripts_bundle, mock_cells_bundle):
-    qc = QualityControl(mock_transcripts_bundle, mock_cells_bundle)
+    qc = QCEvaluator(mock_transcripts_bundle, mock_cells_bundle)
     qc_dict = qc.compare_clusters()
     assert isinstance(qc_dict, dict)
 
 def test_error_cellqc(mock_transcripts_bundle, mock_err_bundle):
-    qc = QualityControl(mock_transcripts_bundle, mock_err_bundle)
+    qc = QCEvaluator(mock_transcripts_bundle, mock_err_bundle)
     with pytest.raises(ValueError, match="No known QC columns found in cells data. Expected any of:"):
         qc.compare_clusters()

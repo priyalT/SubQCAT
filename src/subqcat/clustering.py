@@ -3,7 +3,7 @@ import pandas as pd
 from sklearn.cluster import KMeans
 
 
-class Cluster:
+class SpatialClusterer:
     def __init__(self, dataset: pd.DataFrame):
         required_cols = ['cell_id', 'distance_from_center']
         missing_cols = [col for col in required_cols if col not in dataset.columns]

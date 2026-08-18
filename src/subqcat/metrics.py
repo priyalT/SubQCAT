@@ -2,7 +2,7 @@ import numpy as np
 import pandas as pd
 
 
-class Metrics:
+class SubcellularMetrics:
     def __init__(self, dataset: pd.DataFrame):
         required_cols = ['cell_id', 'x_location', 'y_location', 'z_location']
         missing_cols = [col for col in required_cols if col not in dataset.columns]

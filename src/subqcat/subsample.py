@@ -5,7 +5,7 @@ import pandas as pd
 from subqcat.io import XeniumBundle
 
 
-class SampleXenium:
+class XeniumSampler:
     def __init__(self, xenium: XeniumBundle):
         self.xenium = xenium
 

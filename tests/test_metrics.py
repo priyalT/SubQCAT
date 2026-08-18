@@ -2,8 +2,8 @@ import pandas as pd
 import pytest
 
 from subqcat.io import XeniumBundle
-from subqcat.metrics import Metrics
-from subqcat.subsample import SampleXenium
+from subqcat.metrics import SubcellularMetrics
+from subqcat.subsample import XeniumSampler
 
 
 @pytest.fixture
@@ -22,7 +22,7 @@ def mock_transcripts_bundle(tmp_path):
     })
     fake_data.to_parquet(bundle_dir / "transcripts.parquet")
     bundle = XeniumBundle(bundle_dir)
-    return SampleXenium(bundle)
+    return XeniumSampler(bundle)
 
 @pytest.fixture
 def error_mock_transcripts_bundle(tmp_path):
@@ -39,12 +39,12 @@ def error_mock_transcripts_bundle(tmp_path):
     })
     fake_data.to_parquet(bundle_dir / "transcripts.parquet")
     bundle = XeniumBundle(bundle_dir)
-    return SampleXenium(bundle)
+    return XeniumSampler(bundle)
 
 
 def test_transcript_distance_calc(mock_transcripts_bundle):
     subsampled_df = mock_transcripts_bundle.subsample()
-    metrics = Metrics(subsampled_df)
+    metrics = SubcellularMetrics(subsampled_df)
     transcript_distance = metrics.transcript_distance()
     
     assert isinstance(transcript_distance, pd.DataFrame)
@@ -54,6 +54,6 @@ def test_transcript_distance_calc(mock_transcripts_bundle):
 def test_error_transcript_distance_calc(error_mock_transcripts_bundle):
     subsample_df = error_mock_transcripts_bundle.subsample()
     with pytest.raises(ValueError, match="Missing required columns for metrics calculation:"):
-        compute_metrics = Metrics(subsample_df)
+        compute_metrics = SubcellularMetrics(subsample_df)
         compute_metrics.transcript_distance()
 

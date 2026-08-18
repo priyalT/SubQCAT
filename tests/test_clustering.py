@@ -1,10 +1,10 @@
 import pandas as pd
 import pytest
 
-from subqcat.clustering import Cluster
+from subqcat.clustering import SpatialClusterer
 from subqcat.io import XeniumBundle
-from subqcat.metrics import Metrics
-from subqcat.subsample import SampleXenium
+from subqcat.metrics import SubcellularMetrics
+from subqcat.subsample import XeniumSampler
 
 
 @pytest.fixture
@@ -26,13 +26,13 @@ def mock_transcripts_bundle(tmp_path):
 
     fake_data.to_parquet(bundle_dir / "transcripts.parquet")
     bundle = XeniumBundle(bundle_dir)
-    return SampleXenium(bundle)
+    return XeniumSampler(bundle)
 
 def test_clustering(mock_transcripts_bundle):
     subsampled_df = mock_transcripts_bundle.subsample()
-    metrics = Metrics(subsampled_df)
+    metrics = SubcellularMetrics(subsampled_df)
     transcript_distance = metrics.transcript_distance()
-    clustering = Cluster(transcript_distance)
+    clustering = SpatialClusterer(transcript_distance)
     kmc = clustering.kMeans_clustering()
     assert isinstance(kmc, pd.DataFrame)
     assert 'spatial_cluster' in kmc.columns
@@ -41,5 +41,5 @@ def test_error_clustering():
     bad_df = pd.DataFrame({"cell_id": ["123", "456"], "some_other_column": [1.0, 2.0]})
     
     with pytest.raises(ValueError, match="Missing required columns for clustering:"):
-        clustering = Cluster(bad_df)
+        clustering = SpatialClusterer(bad_df)
         clustering.kMeans_clustering()
