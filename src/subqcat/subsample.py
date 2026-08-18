@@ -10,7 +10,7 @@ class SampleXenium:
         self.xenium = xenium
 
     def clean_data(self) -> dd.DataFrame:
-        df = self.xenium.load_dataframe()
+        df = self.xenium.load_transcripts_dataframe()
         required_cols = ['qv', 'is_gene', 'cell_id', 'codeword_index', 'codeword_category']
         missing_cols = [col for col in required_cols if col not in df.columns]
         if missing_cols:
