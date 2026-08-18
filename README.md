@@ -2,7 +2,7 @@
 
 # SubQCAT: Subcellular Quality Control AssessmenT
 
-![alt text](<SubQCat Logo/SubQCat banner.png>)
+![alt text](<SubQCat Logo/SubQCat Banner.png>)
 
 SubQCat is a subcellular quality control tool developed using Python. 
 It is currently under development.
