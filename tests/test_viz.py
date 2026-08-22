@@ -27,13 +27,13 @@ def missing_metric_dataframe():
 def missing_cols_dataframe():
     err = pd.DataFrame({
         "cell_area": [1.0, 2.0],
-        "x_axis": [4.0, 7.0], 
-        "spatial_cluster": [1, 2]})
+        "distance_from_center": [4.0, 7.0], 
+        "x_axis": [4.0, 7.0]})
     return err
     
 def test_missing_metric_for_vis(missing_metric_dataframe):
     with pytest.raises(ValueError, match="No valid QC columns found for plotting. Expected any of: "):
-        plot = SubQCATPlotter(missing_metric_dataframe)
+        plot = SubQCATPlotter(missing_metric_dataframe, 'distance_from_center')
         plot.scatter_plot()
 
 def test_metric_not_in_data(missing_metric_dataframe):
@@ -43,6 +43,6 @@ def test_metric_not_in_data(missing_metric_dataframe):
 
 def test_missing_cols_for_vis(missing_cols_dataframe):
     with pytest.raises(ValueError, match="Missing required columns: "):
-        plot = SubQCATPlotter(missing_cols_dataframe)
+        plot = SubQCATPlotter(missing_cols_dataframe, "distance_from_center")
         plot.scatter_plot()
 

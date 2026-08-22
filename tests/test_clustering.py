@@ -33,13 +33,13 @@ def test_clustering(mock_transcripts_bundle):
     metrics = SubcellularMetrics(subsampled_df)
     transcript_distance = metrics.transcript_distance()
     clustering = SpatialClusterer(transcript_distance)
-    kmc = clustering.kMeans_clustering()
+    kmc = clustering.kMeans_clustering('distance_from_center')
     assert isinstance(kmc, pd.DataFrame)
     assert 'spatial_cluster' in kmc.columns
 
 def test_error_clustering():
-    bad_df = pd.DataFrame({"cell_id": ["123", "456"], "some_other_column": [1.0, 2.0]})
+    bad_df = pd.DataFrame({"some_other_column": [1.0, 2.0]})
     
-    with pytest.raises(ValueError, match="Missing required columns for clustering:"):
+    with pytest.raises(ValueError, match="Missing required column:"):
         clustering = SpatialClusterer(bad_df)
-        clustering.kMeans_clustering()
+        clustering.kMeans_clustering('distance_from_center')

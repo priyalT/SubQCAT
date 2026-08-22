@@ -30,7 +30,7 @@ def mock_transcripts_bundle(tmp_path):
     sub_sample = XeniumSampler(bundle)
     sub_sample = sub_sample.subsample()
     clustering = SpatialClusterer(sub_sample)
-    return clustering.kMeans_clustering()
+    return clustering.kMeans_clustering(metric='distance_from_center')
 
 
 @pytest.fixture
