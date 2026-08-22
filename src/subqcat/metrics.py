@@ -1,6 +1,8 @@
 import numpy as np
 import pandas as pd
 from scipy.spatial import KDTree
+from scipy.spatial import Delaunay
+
 
 
 class SubcellularMetrics:
@@ -42,3 +44,31 @@ class SubcellularMetrics:
             mean_dist = np.mean(actual_nn_distances)
             nn_distances.append({'cell_id': cell_id, 'mean_nn_distance': mean_dist})
         return pd.DataFrame(nn_distances)
+
+    def triangulation(self) -> pd.DataFrame:
+        """Calculate the Delaunay triangulation graphs for each cell."""
+        df_grouped_by_cell = self.dataset.groupby('cell_id')
+        triangulation = []
+        for cell_id, group in df_grouped_by_cell:
+            if len(group) < 4:
+                triangulation.append({'cell_id': cell_id, 'edge_length_variance': np.nan})
+                continue
+            coords = group[['x_location', 'y_location']].values
+            tri = Delaunay(coords)
+            edges = set()
+            for simplex in tri.simplices:  
+                for i in range(3):
+                    edge = tuple(sorted([simplex[i], simplex[(i+1) % 3]]))
+                    edges.add(edge)
+            
+            edge_lengths = []
+            for i, j in edges:
+                length = np.linalg.norm(coords[i] - coords[j])
+                edge_lengths.append(length)
+            
+            triangulation.append({
+                'cell_id': cell_id, 
+                'edge_length_variance': np.var(edge_lengths)
+            })
+        results = pd.DataFrame(triangulation)
+        results['log_variance'] = np.log1p(results['edge_length_variance'])
