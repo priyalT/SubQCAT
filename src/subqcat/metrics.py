@@ -1,5 +1,6 @@
 import numpy as np
 import pandas as pd
+from scipy.spatial import KDTree
 
 
 class SubcellularMetrics:
@@ -25,3 +26,20 @@ class SubcellularMetrics:
         )
         mean_distance = self.dataset.groupby('cell_id')[['distance_from_center']].mean()
         return mean_distance.reset_index()
+
+    def nearest_neighbour_transcript(self) -> pd.DataFrame:
+        """Calculate the mean nearest neighbour distance between transcripts for each cell."""
+        df_grouped_by_cell = self.dataset.groupby('cell_id')
+        nn_distances = []
+        for cell_id, group in df_grouped_by_cell:
+            if len(group) < 2:
+                nn_distances.append({'cell_id' : cell_id, 'mean_nn_distance': np.nan})
+                continue
+            coords = group[['x_location', 'y_location', 'z_location']].values
+            tree = KDTree(coords)
+            distances, _ = tree.query(coords, k=2)
+            distances = np.asarray(distances)
+            actual_nn_distances = distances[:, 1]
+            mean_dist = np.mean(actual_nn_distances)
+            nn_distances.append({'cell_id': cell_id, 'mean_nn_distance': mean_dist})
+        return pd.DataFrame(nn_distances)
