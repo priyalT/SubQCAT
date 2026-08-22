@@ -16,7 +16,7 @@ class QCEvaluator:
         final_df = pd.merge(self.clustered_df, filtered_dask_cells, on='cell_id', how='inner')
         return final_df
 
-    def compare_clusters(self) -> dict:
+    def compare_clusters(self, metric: str) -> dict:
         """Compare spatial clusters against known QC metrics."""
         merged_df = self.merge_with_cells()
 
@@ -25,12 +25,13 @@ class QCEvaluator:
 
         if not available_qc:
             raise ValueError(f"No known QC columns found in cells data. Expected any of: {qc_columns}")
-
-        grouped_means = merged_df.groupby('spatial_cluster')[['distance_from_center'] + available_qc].mean()
+        if metric not in merged_df.columns:
+            raise ValueError(f"Metric {metric} not found in merged dataset.")
+        grouped_means = merged_df.groupby('spatial_cluster')[[metric] + available_qc].mean()
 
         correlations = {}
         for col in available_qc:
-            correlations[col] = merged_df['distance_from_center'].corr(merged_df[col])
+            correlations[col] = merged_df[metric].corr(merged_df[col])
 
         return {
             'grouped_means': grouped_means,
