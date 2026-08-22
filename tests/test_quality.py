@@ -73,3 +73,8 @@ def test_error_cellqc(mock_transcripts_bundle, mock_err_bundle):
     qc = QCEvaluator(mock_transcripts_bundle, mock_err_bundle)
     with pytest.raises(ValueError, match="No known QC columns found in cells data. Expected any of:"):
         qc.compare_clusters("distance_from_center")
+
+def test_error_metric_not_found(mock_transcripts_bundle, mock_cells_bundle):
+    qc = QCEvaluator(mock_transcripts_bundle, mock_cells_bundle)
+    with pytest.raises(ValueError, match="Metric invalid_metric not found in merged dataset."):
+        qc.compare_clusters("invalid_metric")

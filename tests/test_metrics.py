@@ -111,6 +111,16 @@ def test_nearest_neighbor_transcript_distance(mock_transcripts_bundle):
     assert 'mean_nn_distance' in nn_transcripts.columns
     assert 'cell_id' in nn_transcripts.columns
 
+def test_delaunay_triangulation_less_than_4_points(mock_transcripts_bundle):
+    subsampled_df = mock_transcripts_bundle.subsample()
+    metrics = SubcellularMetrics(subsampled_df)
+    tri = metrics.triangulation()
+    variance = tri.loc[tri['cell_id'] == '123', 'edge_length_variance'].values[0]
+    assert np.isnan(variance)
+    assert isinstance(tri, pd.DataFrame)
+    assert 'edge_length_variance' in tri.columns
+    assert 'cell_id' in tri.columns
+
 def test_delaunay_triangulation(mock_delaunay_bundle):
     subsampled_df = mock_delaunay_bundle.subsample()
     metrics = SubcellularMetrics(subsampled_df)
