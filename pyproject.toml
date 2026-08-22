@@ -42,6 +42,7 @@ dev = [
     "pytest-cov>=7.1.0",
     "ruff>=0.16.2",
     "scikit-learn-stubs>=0.0.3",
+    "scipy-stubs>=1.18.0.1",
     "types-seaborn>=0.13.2.20260728",
 ]
 
