@@ -4,6 +4,7 @@ from matplotlib.figure import Figure
 
 from subqcat.viz import SubQCATPlotter
 
+
 def test_visualisation():
     df = pd.DataFrame({
         "cell_area": ["673", "456"], 
