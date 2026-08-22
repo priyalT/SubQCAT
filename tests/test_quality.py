@@ -66,10 +66,10 @@ def test_cell_merging(mock_transcripts_bundle, mock_cells_bundle):
 
 def test_cell_qc(mock_transcripts_bundle, mock_cells_bundle):
     qc = QCEvaluator(mock_transcripts_bundle, mock_cells_bundle)
-    qc_dict = qc.compare_clusters()
+    qc_dict = qc.compare_clusters('distance_from_center')
     assert isinstance(qc_dict, dict)
 
 def test_error_cellqc(mock_transcripts_bundle, mock_err_bundle):
     qc = QCEvaluator(mock_transcripts_bundle, mock_err_bundle)
     with pytest.raises(ValueError, match="No known QC columns found in cells data. Expected any of:"):
-        qc.compare_clusters()
+        qc.compare_clusters("distance_from_center")
