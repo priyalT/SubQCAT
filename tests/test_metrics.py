@@ -92,3 +92,12 @@ def test_nearest_neighbor_transcript_distance(mock_transcripts_bundle):
     assert isinstance(nn_transcripts, pd.DataFrame)
     assert 'mean_nn_distance' in nn_transcripts.columns
     assert 'cell_id' in nn_transcripts.columns
+
+def test_delaunay_triangulation(mock_transcripts_bundle):
+    subsampled_df = mock_transcripts_bundle.subsample()
+    metrics = SubcellularMetrics(subsampled_df)
+    tri = metrics.triangulation()
+    
+    assert isinstance(tri, pd.DataFrame)
+    assert 'edge_length_variance' in tri.columns
+    assert 'cell_id' in tri.columns
