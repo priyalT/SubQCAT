@@ -1,8 +1,6 @@
 import numpy as np
 import pandas as pd
-from scipy.spatial import KDTree
-from scipy.spatial import Delaunay
-
+from scipy.spatial import Delaunay, KDTree
 
 
 class SubcellularMetrics:
@@ -72,3 +70,4 @@ class SubcellularMetrics:
             })
         results = pd.DataFrame(triangulation)
         results['log_variance'] = np.log1p(results['edge_length_variance'])
+        return results
