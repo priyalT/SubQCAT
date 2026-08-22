@@ -1,3 +1,4 @@
+import numpy as np
 import pandas as pd
 import pytest
 
@@ -42,6 +43,23 @@ def mock_transcripts_bundle(tmp_path):
     bundle = XeniumBundle(bundle_dir)
     return XeniumSampler(bundle)
 
+@pytest.fixture
+def mock_delaunay_bundle(tmp_path):
+    bundle_dir = tmp_path / "mock_delaunay_bundle"
+    bundle_dir.mkdir()
+    fake_data = pd.DataFrame({
+        "cell_id": ["123", "123", "123", "123"], 
+        "x_location": [0.0, 0.0, 10.0, 10.0], 
+        "y_location": [0.0, 10.0, 0.0, 10.0], 
+        "z_location": [0.0, 0.0, 0.0, 0.0], 
+        "qv": [20.0, 20.0, 20.0, 20.0], 
+        "is_gene": [True, True, True, True], 
+        "codeword_index": [1, 1, 1, 1], 
+        "codeword_category": ["gene", "gene", "gene", "gene"]
+    })
+    fake_data.to_parquet(bundle_dir / "transcripts.parquet")
+    bundle = XeniumBundle(bundle_dir)
+    return XeniumSampler(bundle)
 
 @pytest.fixture
 def error_mock_transcripts_bundle(tmp_path):
@@ -93,11 +111,16 @@ def test_nearest_neighbor_transcript_distance(mock_transcripts_bundle):
     assert 'mean_nn_distance' in nn_transcripts.columns
     assert 'cell_id' in nn_transcripts.columns
 
-def test_delaunay_triangulation(mock_transcripts_bundle):
-    subsampled_df = mock_transcripts_bundle.subsample()
+def test_delaunay_triangulation(mock_delaunay_bundle):
+    subsampled_df = mock_delaunay_bundle.subsample()
     metrics = SubcellularMetrics(subsampled_df)
     tri = metrics.triangulation()
     
     assert isinstance(tri, pd.DataFrame)
     assert 'edge_length_variance' in tri.columns
     assert 'cell_id' in tri.columns
+
+    variance = tri.loc[tri['cell_id'] == '123', 'edge_length_variance'].values[0]
+    assert not np.isnan(variance)
+    assert variance > 0
+    assert 'log_variance' in tri.columns
