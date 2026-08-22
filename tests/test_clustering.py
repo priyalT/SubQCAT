@@ -43,3 +43,9 @@ def test_error_clustering():
     with pytest.raises(ValueError, match="Missing required column:"):
         clustering = SpatialClusterer(bad_df)
         clustering.kMeans_clustering('distance_from_center')
+
+def test_missing_metric_clustering():
+    bad_df = pd.DataFrame({"cell_id": [1.0, 2.0]})
+    with pytest.raises(ValueError, match="Metric"):
+        clustering = SpatialClusterer(bad_df)
+        clustering.kMeans_clustering('distance_from_center')

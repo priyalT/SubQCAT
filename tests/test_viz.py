@@ -36,6 +36,12 @@ def test_missing_metric_for_vis(missing_metric_dataframe):
         plot = SubQCATPlotter(missing_metric_dataframe, 'distance_from_center')
         plot.scatter_plot()
 
+def test_missing_x_metric_for_vis():
+    bad_df = pd.DataFrame({"cell_id": [1.0, 2.0], "cell_area": [3.0, 5.0], "distance_from_center": [7.0, 10.0]})
+    with pytest.raises(ValueError, match="Specified metric "):
+        plot = SubQCATPlotter(bad_df, 'distance_from_center', 'nucleus_area')
+        plot.scatter_plot()
+
 def test_metric_not_in_data(missing_metric_dataframe):
     with pytest.raises(ValueError, match="not found in data."):
         plot = SubQCATPlotter(missing_metric_dataframe, "cell_area")
