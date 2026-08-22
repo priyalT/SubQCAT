@@ -41,7 +41,6 @@ def error_mock_transcripts_bundle(tmp_path):
     bundle = XeniumBundle(bundle_dir)
     return XeniumSampler(bundle)
 
-
 def test_transcript_distance_calc(mock_transcripts_bundle):
     subsampled_df = mock_transcripts_bundle.subsample()
     metrics = SubcellularMetrics(subsampled_df)
@@ -57,3 +56,11 @@ def test_error_transcript_distance_calc(error_mock_transcripts_bundle):
         compute_metrics = SubcellularMetrics(subsample_df)
         compute_metrics.transcript_distance()
 
+def test_nearest_neighbor_transcript_distance(mock_transcripts_bundle):
+    subsampled_df = mock_transcripts_bundle.subsample()
+    metrics = SubcellularMetrics(subsampled_df)
+    nn_transcripts = metrics.nearest_neighbour_transcript()
+    
+    assert isinstance(nn_transcripts, pd.DataFrame)
+    assert 'mean_nn_distance' in nn_transcripts.columns
+    assert 'cell_id' in nn_transcripts.columns

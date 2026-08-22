@@ -11,7 +11,6 @@ class SubcellularMetrics:
             raise ValueError(f"Missing required columns for metrics calculation: {missing_cols}")
         self.dataset = dataset.copy()
 
-
     def transcript_distance(self) -> pd.DataFrame:
         """Calculate the mean transcript distance to cell centroid for each cell."""
         df_grouped_by_cell = self.dataset.groupby('cell_id')
