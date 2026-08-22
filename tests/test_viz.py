@@ -4,7 +4,6 @@ from matplotlib.figure import Figure
 
 from subqcat.viz import SubQCATPlotter
 
-
 def test_visualisation():
     df = pd.DataFrame({
         "cell_area": ["673", "456"], 
@@ -41,6 +40,13 @@ def test_missing_x_metric_for_vis():
     with pytest.raises(ValueError, match="Specified metric "):
         plot = SubQCATPlotter(bad_df, 'distance_from_center', 'nucleus_area')
         plot.scatter_plot()
+
+def test_x_metric_for_vis():
+    df = pd.DataFrame({"cell_id": [1.0, 2.0], "cell_area": [3.0, 5.0], "distance_from_center": [7.0, 10.0], "spatial_cluster": [1.0, 2.0]})
+    plot = SubQCATPlotter(df, 'distance_from_center', 'cell_area')
+    fig = plot.scatter_plot()
+    assert isinstance(fig, Figure)
+
 
 def test_metric_not_in_data(missing_metric_dataframe):
     with pytest.raises(ValueError, match="not found in data."):
